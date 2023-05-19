@@ -1,0 +1,14 @@
+.nav{
+    &__block{
+        height: fit-content;
+        text-align: center;
+    }
+    &__logo{
+        text-shadow: -4px 0 black, 0 4px black, 4px 0 black, 0 -4px black;
+        font-size: 72px;
+        color: #fff;
+        span{
+            color: #CC0000;
+        }
+    }
+}

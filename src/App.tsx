@@ -1,57 +1,54 @@
 import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import './App.scss';
+import Logo from './components/logo/Logo';
+import { useGetAllPokemonInfoQuery, useLazyGetPokemonDetailQuery } from './store/pokemon/pokemon.api';
+import { useAppDispatch, useAppSelector } from './hooks/hooks';
+import { pokemonActions } from './store/pokemon/pokemonSlice';
+import PokeBlock from './components/pokeblock/PokeBlock';
+import PokeDetail from './components/pokedetail/PokeDetail';
+import Loader from './components/loader/Loader';
 
 function App() {
+  const { pokemonsShowMore } = pokemonActions;
+  const savedPoke = useAppSelector(store => store.pokemonSlice.pokemonsToShow)
+  const dispatch = useAppDispatch()
+
+  const { data: PokemonsNameAndUrl, isLoading, isError } = useGetAllPokemonInfoQuery(savedPoke)
+
+  const [fetchInfo, { data: PokemonDetail, isLoading: detailLoading }] = useLazyGetPokemonDetailQuery()
+
+
+  const clickHandle = (str: string) => {
+    fetchInfo(str)
+  }
+
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
+    <>
+      <div className='container mx-auto pb-11'>
+        <Logo />
+
+        {isError && <h1 className=' font-bold text-center max-w-full text-white'>Opps... something wrong</h1>}
+        <div className="flex justify-between relative pb-11">
+          <div className='side__left sm:grid-cols-2  lg:grid-cols-3 grid auto-rows-max grid-cols-1 gap-6'>
+            {!isError && PokemonsNameAndUrl?.map(pokemon => (
+              <PokeBlock key={pokemon.url} openFullInfo={clickHandle} name={pokemon.name} />
+            ))}
+            {isLoading && <Loader />}
+          </div>
+          <div className='side__rigth'>
+            {detailLoading && <Loader />}
+            {!detailLoading && PokemonDetail && <PokeDetail pokeInfo={PokemonDetail} />}
+          </div>
+        </div>
+        {
+          !isError &&
+          PokemonsNameAndUrl &&
+          <button className='load' onClick={() => dispatch(pokemonsShowMore(12))}>Show more</button>
+        }
+      </div>
+    </>
   );
 }
 
