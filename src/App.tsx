@@ -38,7 +38,6 @@ function App() {
             {isLoading && <Loader />}
           </div>
           <div className='side__rigth'>
-            {detailLoading && <Loader />}
             {!detailLoading && PokemonDetail && <PokeDetail pokeInfo={PokemonDetail} />}
           </div>
         </div>

@@ -10,7 +10,7 @@ interface PokeBlockProps {
 
 const PokeBlock: FC<PokeBlockProps> = ({ name, openFullInfo }) => {
 
-    const { data, isLoading, isError } = useGetPokemonDetailQuery(name)
+    const { data } = useGetPokemonDetailQuery(name)
 
     const open = () => {
         openFullInfo(name)
