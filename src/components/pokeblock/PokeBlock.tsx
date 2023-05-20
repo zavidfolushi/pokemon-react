@@ -2,10 +2,11 @@ import React, { FC } from 'react';
 import cn from 'classnames'
 import styles from './PokeBlock.module.scss'
 import { useGetPokemonDetailQuery } from '../../store/pokemon/pokemon.api';
+import { IPokemonDetail } from '../../models/models';
 
 interface PokeBlockProps {
     name: string
-    openFullInfo(name: string): void;
+    openFullInfo(data: IPokemonDetail | undefined): void;
 }
 
 const PokeBlock: FC<PokeBlockProps> = ({ name, openFullInfo }) => {
@@ -13,7 +14,7 @@ const PokeBlock: FC<PokeBlockProps> = ({ name, openFullInfo }) => {
     const { data } = useGetPokemonDetailQuery(name)
 
     const open = () => {
-        openFullInfo(name)
+        openFullInfo(data)
     }
 
     return (

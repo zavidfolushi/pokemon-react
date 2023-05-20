@@ -19,7 +19,11 @@
     display: block;    
     transition: all .3s;
     &:hover{
-        opacity: 0.7;
         border-color: transparent;
     }   
+    &:disabled{
+        opacity: 0.7;
+        cursor: not-allowed;
+        border-color: #000;
+    }
 }
